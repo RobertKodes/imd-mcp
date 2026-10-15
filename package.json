@@ -1,0 +1,50 @@
+{
+  "name": "imd-mcp",
+  "version": "0.1.0",
+  "description": "MCP server that lets any AI agent hire the IMD swarm, with a saver: find existing work first, free check before paying, no duplicates, hard spend caps.",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "imd-mcp": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "tsx src/cli.ts",
+    "test": "vitest run",
+    "typecheck": "tsc -p .",
+    "prepare": "tsc -p tsconfig.build.json"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.1",
+    "@x402/core": "2.28.0",
+    "@x402/evm": "2.28.0",
+    "viem": "^2.21.54",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RobertKodes/imd-mcp.git"
+  },
+  "keywords": [
+    "mcp",
+    "imd",
+    "ai-agents",
+    "x402",
+    "claude",
+    "swarm"
+  ]
+}
