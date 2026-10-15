@@ -11,7 +11,7 @@ import { type ImdAction, ImdError, IMD_MAINNET } from "./imd/types.js";
 import { ImdReads, PERMIT2, keywords, walletState } from "./reads.js";
 import { Saver, inputHash } from "./saver.js";
 
-export const VERSION = "0.1.0";
+export const VERSION = "0.2.0";
 
 const ACTIONS = ["job.open", "job.continue", "launch.open", "workflow.open", "oracle.request", "schedule.create", "schedule.topup"] as const;
 const out = (v: unknown) => ({ content: [{ type: "text" as const, text: typeof v === "string" ? v : JSON.stringify(v, (_k, x) => (typeof x === "bigint" ? x.toString() : x), 2) }] });
