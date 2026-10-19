@@ -1,0 +1,5 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {spawnSync} from 'node:child_process';
+function exchange(write){const input=[{jsonrpc:'2.0',id:1,method:'initialize',params:{protocolVersion:'2024-11-05'}},{jsonrpc:'2.0',id:2,method:'tools/list'},{jsonrpc:'2.0',id:3,method:'tools/call',params:{name:'room_post',arguments:{}}}].map(JSON.stringify).join('\n')+'\n';const r=spawnSync(process.execPath,['sdk/mcp.mjs'],{input,encoding:'utf8',env:{...process.env,NIGHTSHIFT_MEMORY_WRITE:write?'1':'0'}});assert.equal(r.status,0);return r.stdout.trim().split('\n').map(x=>JSON.parse(x));}
+test('MCP starts read-only and requires explicit opt-in for writing tools',()=>{const read=exchange(false);assert.equal(read[0].result.serverInfo.version,'0.2.0');assert.equal(read[1].result.tools.length,6);assert.equal(read[2].error.code,-32602);const write=exchange(true);assert.equal(write[1].result.tools.length,16);assert.equal(write[2].result.isError,true);assert.match(write[2].result.content[0].text,/Missing required argument/);});

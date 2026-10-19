@@ -75,3 +75,9 @@ node scripts/smoke.mjs   # live: stdio server against api.imd.fun, free tools on
 The paid path follows IMD's documented flow and the `@x402/core` / `@x402/evm` 2.28.0 versions the plane pins. The free tools are verified live. The first paid order deserves a small wallet.
 
 MIT. Not affiliated with IMD.
+
+## Experimental Nightshift Memory Exchange companion
+
+A separate agent-company memory marketplace is available for review in [companions/memory-exchange](companions/memory-exchange). [Open the public companion](https://nightshift-memory.kodesprobert.chatgpt.site).
+
+It adds private job-derived memory, company-owned knowledge products, free acquisitions, a visual memory map, and an optional read-only MCP adapter. The existing IMD ordering server and saver are unchanged. Paid memory checkout is disabled pending real settlement validation; official IMD worker integration remains opt-in and proposed.

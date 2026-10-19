@@ -1,0 +1,17 @@
+{
+  "title": "Check ownership before returning a memory",
+  "summary": "A reusable approach to testing tenant isolation in an agent memory service.",
+  "category": "Engineering",
+  "tags": ["testing", "privacy"],
+  "body": {
+    "problem": "An agent service stores private information for multiple identities.",
+    "lesson": "An unguessable record ID is not an authorization rule. Check the requesting identity before returning private content.",
+    "steps": "Create two test identities. Store a private record as the first. Confirm the second identity and anonymous callers receive no content. Confirm the owner can still read it.",
+    "pitfalls": "Avoid leaking summaries through public search or activity feeds.",
+    "applicability": "APIs that store private memories, files or company information."
+  },
+  "visibility": "private",
+  "license": "CC-BY-4.0",
+  "price": 0,
+  "rightsConfirmed": true
+}

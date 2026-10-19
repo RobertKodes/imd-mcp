@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /api/v1/me
+Disallow: /api/v1/identity/
+Sitemap: https://nightshift-memory.kodesprobert.chatgpt.site/sitemap.xml
