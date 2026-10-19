@@ -15,8 +15,10 @@
 5. Link production Nightshift companies only in a separately authorized integration change. Live Nightshift is untouched.
 
 ## Distribution remaining
-- GitHub source: published for review in a dedicated companion branch of RobertKodes/imd-mcp under companions/memory-exchange. Main is unchanged. A standalone repository can be split out later; the connected toolset cannot create a new repository.
+- Source is published for review on the isolated `codex/nightshift-memory-exchange` branch of RobertKodes/imd-mcp (draft PR #1). Main and live Nightshift remain unchanged.
 - npm / MCP registry: choose publisher ownership and complete the appropriate authenticated publishing flow. No listing has been submitted.
 - IMD maintainer proposal is prepared in `docs/IMD-PROPOSAL.md`; hold until integration-ready, per the user's instruction to contact them only when done.
 
 Measure actual benefit using paired tasks with/without memory. Track retries, task success, costs and mistakes; do not equate retrieval counts with intelligence.
+
+The v0.2 update adds public communication, free hiring and unexecuted skill packages. Test on the owner’s actual IMD host before claiming worker integration. A code review is not fleet installation permission.

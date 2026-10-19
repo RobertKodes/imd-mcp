@@ -15,13 +15,20 @@ export function validateCapsule(x) {
  if(!Number.isSafeInteger(x.price)||x.price<0||x.price>100000000)throw new ApiError(400,'Price must be 0–100 USDC in integer micro-USDC');
  if(x.price>0&&x.license==='CC-BY-4.0')throw new ApiError(400,'Paid content uses Agent-use-1.0; CC-BY content is freely redistributable');
  if(x.sourceJob&&!UUID.test(x.sourceJob))throw new ApiError(400,'Source must be an IMD job UUID');
- const raw=JSON.stringify({body,title:x.title,summary:x.summary,tags:x.tags});
- if(/-----BEGIN .*PRIVATE KEY-----|\bsk-[a-zA-Z0-9_-]{20,}|(?:private[_ -]?key|api[_ -]?key|bearer)\s*[:=]\s*["']?[a-zA-Z0-9_-]{24,}/i.test(raw))throw new ApiError(400,'Possible credential detected. Remove it before saving.');
- return {title:text(x.title,5,100,'Title'),summary:text(x.summary,20,300,'Summary'),category:x.category,tags:Array.isArray(x.tags)?x.tags.slice(0,6).map(t=>text(t,1,24,'Tag')):[],body,visibility:x.visibility,license:x.license,price:x.price,sourceJob:x.sourceJob||null,parentId:x.parentId||null};
+ const kind=x.kind||'lesson';if(!['lesson','skill'].includes(kind))throw new ApiError(400,'Unknown product kind');
+ let skill=null;if(kind==='skill'){
+ if(!x.skill||!Array.isArray(x.skill.files)||x.skill.files.length<1||x.skill.files.length>5)throw new ApiError(400,'A skill needs 1–5 source files');
+ const seen=new Set();const files=x.skill.files.map(f=>{const path=text(f.path,1,100,'File path');if(!/^[a-zA-Z0-9_-]+(?:\/[a-zA-Z0-9_-]+)*\.[a-zA-Z0-9]+$/.test(path)||seen.has(path))throw new ApiError(400,'Use unique relative file paths without dot segments');seen.add(path);return{path,content:text(f.content,1,12000,'File content')}});
+ if(files.reduce((n,f)=>n+f.content.length,0)>12000)throw new ApiError(400,'Skill source limit is 12000 characters');
+ skill={runtime:text(x.skill.runtime,2,100,'Runtime'),testCommand:text(x.skill.testCommand,2,300,'Test command'),files,validation:'Author supplied; not executed or independently verified'};
+ }
+ const raw=JSON.stringify({body,skill,title:x.title,summary:x.summary,tags:x.tags});
+ if(/-----BEGIN .*PRIVATE KEY-----|\bnsm_[a-f0-9]{64}\b|\bsk-[a-zA-Z0-9_-]{20,}|(?:private[_ -]?key|api[_ -]?key|bearer)\s*[:=]\s*["']?[a-zA-Z0-9_-]{24,}/i.test(raw))throw new ApiError(400,'Possible credential detected. Remove it before saving.');
+ return {kind,skill,title:text(x.title,5,100,'Title'),summary:text(x.summary,20,300,'Summary'),category:x.category,tags:Array.isArray(x.tags)?x.tags.slice(0,6).map(t=>text(t,1,24,'Tag')):[],body,visibility:x.visibility,license:x.license,price:x.price,sourceJob:x.sourceJob||null,parentId:x.parentId||null};
 }
 export async function digest(value){return [...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value)))].map(x=>x.toString(16).padStart(2,'0')).join('');}
 export function newKey(){return 'nsm_'+[...crypto.getRandomValues(new Uint8Array(32))].map(x=>x.toString(16).padStart(2,'0')).join('');}
-export function publicCapsule(c){const {body,owner,...safe}=c;return {...safe,tags:typeof c.tags==='string'?JSON.parse(c.tags):c.tags};}
+export function publicCapsule(c){const {body,owner,skill_json,...safe}=c;return {...safe,tags:typeof c.tags==='string'?JSON.parse(c.tags):c.tags};}
 export function canRead(c,agent,acquired){return (agent&&c.owner===agent.id)||c.visibility==='public'&&(c.price===0||acquired);}
 export function validateTransfer(receipt,quote,tx,block,now){
  if(receipt.status!=='0x1')throw new ApiError(400,'Transaction did not succeed');

@@ -3,6 +3,16 @@ export class MemoryExchange {
  constructor({baseUrl='https://nightshift-memory.kodesprobert.chatgpt.site',apiKey,fetcher=fetch}={}){this.baseUrl=baseUrl.replace(/\/$/,'');this.apiKey=apiKey;this.fetcher=fetcher;if(!this.baseUrl.startsWith('https://')&&!this.baseUrl.startsWith('http://localhost'))throw new Error('Use HTTPS for agent credentials');}
  async request(path,body){const r=await this.fetcher(`${this.baseUrl}/api/v1/${path}`,{method:body?'POST':'GET',headers:{'Content-Type':'application/json',...(this.apiKey?{Authorization:`Bearer ${this.apiKey}`}:{})},body:body?JSON.stringify(body):undefined,signal:AbortSignal.timeout(30000)});const result=await r.json();if(!r.ok)throw Object.assign(new Error(result.error||'Exchange request failed'),{status:r.status});return result;}
  async register({name,companyName,mission}){const result=await this.request('agents',{name,companyName,mission});this.apiKey=result.apiKey;return result;}
+ room(after=0){return this.request('room?after='+encodeURIComponent(after));}
+ postMessage(body){return this.request('room/messages',body);}
+ presence(activity='connected agent'){return this.request('room/presence',{activity});}
+ hires(){return this.request('hires');}
+ hire(id){return this.request('hires/'+encodeURIComponent(id));}
+ requestHelp(body){return this.request('hires',{...body,budget:0});}
+ offer(id,body){return this.request('hires/'+encodeURIComponent(id)+'/offers',body);}
+ award(id,offerId){return this.request('hires/'+encodeURIComponent(id)+'/award',{offerId});}
+ deliver(id,delivery){return this.request('hires/'+encodeURIComponent(id)+'/deliver',{delivery});}
+ review(id,decision,feedback){return this.request('hires/'+encodeURIComponent(id)+'/review',{decision,feedback});}
  me(){return this.request('me');}
  createCompany({name,mission}){return this.request('companies',{name,mission});}
  search(query='',category=''){return this.request(`catalog?q=${encodeURIComponent(query)}&category=${encodeURIComponent(category)}`);}
